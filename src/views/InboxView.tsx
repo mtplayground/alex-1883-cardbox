@@ -1,10 +1,15 @@
 import { MessageCard } from '../components';
 import { interactionStore, useInteractionStore } from '../store';
+import type { MessageId } from '../types';
 
 export function InboxView() {
-  const { messages, selectedMessage, selectedMessageId, unreadCount } =
-    useInteractionStore();
+  const { messages, selectedMessageId, unreadCount } = useInteractionStore();
   const totalCount = messages.length;
+
+  function handleOpenMessage(messageId: MessageId) {
+    interactionStore.markMessageRead(messageId, true);
+    interactionStore.selectMessage(messageId);
+  }
 
   return (
     <section className="inbox-view" aria-labelledby="inbox-title">
@@ -36,19 +41,13 @@ export function InboxView() {
             </div>
           ) : null}
 
-          {selectedMessage ? (
-            <p className="inbox-selected-note" role="status">
-              Selected for reading: {selectedMessage.subject}
-            </p>
-          ) : null}
-
           <div className="inbox-list" role="list" aria-label="Inbox messages">
             {messages.map((message) => (
               <div key={message.id} role="listitem">
                 <MessageCard
                   message={message}
                   selected={message.id === selectedMessageId}
-                  onSelect={interactionStore.selectMessage}
+                  onSelect={handleOpenMessage}
                 />
               </div>
             ))}

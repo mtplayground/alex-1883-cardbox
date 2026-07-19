@@ -1,10 +1,11 @@
 import { AppShell } from './components/AppShell';
-import { InboxView } from './views';
+import { useInteractionStore } from './store';
+import { InboxView, ReaderView } from './views';
 
 export default function App() {
+  const { selectedMessage } = useInteractionStore();
+
   return (
-    <AppShell>
-      <InboxView />
-    </AppShell>
+    <AppShell>{selectedMessage ? <ReaderView /> : <InboxView />}</AppShell>
   );
 }
