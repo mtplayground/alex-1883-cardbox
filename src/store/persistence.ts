@@ -1,4 +1,4 @@
-import type { DraftMessage, ReadStateById } from './types';
+import type { DraftMessage, LocalMessage, ReadStateById } from './types';
 
 type BrowserStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
@@ -15,6 +15,7 @@ export type PersistedInteractionState = {
   version: typeof STORAGE_VERSION;
   readById: ReadStateById;
   draft: DraftMessage;
+  localMessages: LocalMessage[];
 };
 
 export function getBrowserStorage(): BrowserStorage | null {
@@ -45,11 +46,22 @@ export function loadInteractionState(
 
     const parsedValue: unknown = JSON.parse(rawValue);
 
+    if (!isObjectRecord(parsedValue)) {
+      return null;
+    }
+
     if (!isPersistedInteractionState(parsedValue)) {
       return null;
     }
 
-    return parsedValue;
+    return {
+      version: parsedValue.version,
+      readById: parsedValue.readById,
+      draft: parsedValue.draft,
+      localMessages: isLocalMessageArray(parsedValue.localMessages)
+        ? parsedValue.localMessages
+        : [],
+    };
   } catch {
     return null;
   }
@@ -70,6 +82,7 @@ export function saveInteractionState(
         version: STORAGE_VERSION,
         readById: state.readById,
         draft: state.draft,
+        localMessages: state.localMessages,
       }),
     );
   } catch {
@@ -102,6 +115,24 @@ function isPersistedInteractionState(
     value.version === STORAGE_VERSION &&
     isReadStateById(value.readById) &&
     isDraftMessage(value.draft)
+  );
+}
+
+function isLocalMessageArray(value: unknown): value is LocalMessage[] {
+  return Array.isArray(value) && value.every(isLocalMessage);
+}
+
+function isLocalMessage(value: unknown): value is LocalMessage {
+  if (!isObjectRecord(value) || !isDraftMessage(value)) {
+    return false;
+  }
+
+  const localMessage = value as Record<string, unknown>;
+
+  return (
+    typeof localMessage.id === 'string' &&
+    typeof localMessage.snippet === 'string' &&
+    typeof localMessage.timestamp === 'string'
   );
 }
 

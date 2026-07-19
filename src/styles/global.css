@@ -166,6 +166,10 @@
     @apply flex flex-wrap gap-2;
   }
 
+  .inbox-view__tools {
+    @apply flex flex-col gap-3 sm:items-end;
+  }
+
   .inbox-count-pill {
     @apply rounded-full border border-neutral-border bg-neutral-surface px-3 py-1 text-sm font-medium text-neutral-muted;
   }
@@ -241,6 +245,66 @@
 
   .reader-body {
     @apply grid gap-4 pt-5 text-base leading-7 text-neutral-ink;
+  }
+
+  .compose-action {
+    @apply w-fit rounded-lg px-4 py-2 text-sm font-semibold shadow-sm;
+  }
+
+  .compose-panel {
+    @apply rounded-lg border border-neutral-border bg-neutral-surface p-5 shadow-surface;
+  }
+
+  .compose-panel__header {
+    @apply flex flex-col gap-3 border-b border-neutral-border pb-4 sm:flex-row sm:items-start sm:justify-between;
+  }
+
+  .compose-panel__eyebrow,
+  .compose-panel__title,
+  .compose-form__status {
+    @apply m-0;
+  }
+
+  .compose-panel__eyebrow {
+    @apply text-xs font-bold uppercase text-accent;
+    letter-spacing: 0.08em;
+  }
+
+  .compose-panel__title {
+    @apply mt-2 text-2xl font-semibold leading-tight text-neutral-ink;
+  }
+
+  .compose-panel__close {
+    @apply w-fit rounded-lg border border-neutral-border bg-neutral-surface px-3 py-2 text-sm font-semibold text-neutral-muted transition-colors hover:border-accent/40 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+  }
+
+  .compose-form {
+    @apply grid gap-4 pt-5;
+  }
+
+  .compose-field {
+    @apply grid gap-2 text-sm font-semibold text-neutral-ink;
+  }
+
+  .compose-field input,
+  .compose-field textarea {
+    @apply w-full rounded-lg border border-neutral-border bg-white px-3 py-2 text-base font-normal leading-6 text-neutral-ink shadow-sm outline-none transition-colors placeholder:text-neutral-muted focus:border-accent focus:ring-2 focus:ring-accent/20;
+  }
+
+  .compose-field textarea {
+    @apply resize-y;
+  }
+
+  .compose-form__footer {
+    @apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .compose-form__status {
+    @apply text-sm font-medium text-neutral-muted;
+  }
+
+  .compose-form__submit {
+    @apply w-fit rounded-lg border border-accent bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground shadow-sm transition-colors hover:bg-accent/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
   }
 }
 
