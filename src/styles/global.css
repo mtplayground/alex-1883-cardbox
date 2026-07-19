@@ -67,14 +67,12 @@
   }
 
   .app-kicker,
-  .placeholder-eyebrow {
+  .inbox-view__eyebrow {
     @apply mb-2 text-xs font-bold uppercase text-neutral-muted;
     letter-spacing: 0.08em;
   }
 
-  .app-header h1,
-  .placeholder-panel h2,
-  .placeholder-panel p {
+  .app-header h1 {
     @apply m-0;
   }
 
@@ -86,24 +84,6 @@
 
   .app-main {
     @apply pb-16 pt-8;
-  }
-
-  .placeholder-panel {
-    @apply grid min-h-[360px] place-items-center rounded-lg border border-neutral-border bg-neutral-surface shadow-surface;
-  }
-
-  .placeholder-copy {
-    width: min(100% - 32px, 560px);
-  }
-
-  .placeholder-panel h2 {
-    @apply text-neutral-ink;
-    font-size: clamp(1.75rem, 6vw, 3.25rem);
-    line-height: 1;
-  }
-
-  .placeholder-panel p:last-child {
-    @apply mt-4 text-[1.05rem] leading-relaxed text-neutral-muted;
   }
 
   .accent-unread-indicator {
@@ -169,6 +149,60 @@
   .message-card__snippet {
     @apply m-0 mt-2 line-clamp-2 text-sm leading-6 text-neutral-muted;
   }
+
+  .inbox-view {
+    @apply grid gap-6;
+  }
+
+  .inbox-view__header {
+    @apply flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between;
+  }
+
+  .inbox-view__title {
+    @apply m-0 text-3xl font-semibold leading-tight text-neutral-ink;
+  }
+
+  .inbox-view__summary {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .inbox-count-pill {
+    @apply rounded-full border border-neutral-border bg-neutral-surface px-3 py-1 text-sm font-medium text-neutral-muted;
+  }
+
+  .inbox-list {
+    @apply grid gap-3;
+  }
+
+  .inbox-state {
+    @apply rounded-lg border border-neutral-border bg-neutral-surface px-5 py-8 text-neutral-muted shadow-sm;
+  }
+
+  .inbox-state--compact {
+    @apply px-4 py-3;
+  }
+
+  .inbox-state h3,
+  .inbox-state p,
+  .inbox-selected-note {
+    @apply m-0;
+  }
+
+  .inbox-state h3 {
+    @apply text-lg font-semibold text-neutral-ink;
+  }
+
+  .inbox-state p {
+    @apply mt-2 text-sm leading-6;
+  }
+
+  .inbox-state--compact p {
+    @apply mt-0;
+  }
+
+  .inbox-selected-note {
+    @apply rounded-lg border border-accent/30 bg-neutral-surface px-4 py-3 text-sm font-medium text-neutral-muted;
+  }
 }
 
 @media (max-width: 640px) {
@@ -179,9 +213,5 @@
 
   .app-header {
     @apply pt-6;
-  }
-
-  .placeholder-panel {
-    @apply min-h-[320px];
   }
 }
