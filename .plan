@@ -1,0 +1,49 @@
+# Cardbox Architecture Plan
+
+## Product Shape
+
+Cardbox is a static Vite + React + TypeScript single-page inbox app. It has no live mail server: realistic seed fixtures provide inbox content, and user interactions such as read state, selected message, sent/local messages, and compose draft state live in browser memory with local-storage persistence where required.
+
+## Module Structure
+
+- `src/main.tsx`: React entry point.
+- `src/App.tsx`: App shell and top-level view composition.
+- `src/components/`: Reusable UI pieces, starting with `MessageCard`, unread indicator, sender highlight, compose action, and form controls.
+- `src/views/`: Route-free app views such as `InboxView`, `ReaderView`, and the compose panel container if it becomes screen-level.
+- `src/store/`: Interaction store and persistence helpers. Keep local-storage reads/writes isolated here so tests can cover hydration and fallback behavior.
+- `src/types/`: Shared TypeScript models, especially `Message`, `DraftMessage`, and any local sent-message type.
+- `src/fixtures/`: Seed inbox data.
+- `src/styles/`: Global Tailwind entry and design-token layer if tokens are kept outside Tailwind config.
+- `tests/` or colocated `*.test.ts`: Unit tests for store and persistence.
+- `e2e/`: End-to-end flow tests.
+
+## Shared Types
+
+- `Message`: stable `id`, `sender`, `subject`, `snippet`, `body`, `timestamp`, `read`.
+- `DraftMessage`: `to`, `subject`, `body`, updated through compose interactions and persisted to local storage.
+- `SentMessage` or local outbox entry: generated from compose submit and stored locally rather than transmitted.
+- Store state should expose messages, selected message id, draft, sent/local messages, and actions for selecting, marking read/unread, updating draft, submitting compose, and hydrating persisted state.
+
+## Issue Dependencies
+
+- Issue #1 establishes the Vite React TypeScript app shell, linting/formatting, and base folders.
+- Issue #2 depends on #1 and creates Tailwind plus one centralized accent token and neutral base tokens.
+- Issue #3 depends on #1 and adds message types and seed fixtures.
+- Issue #4 depends on #2 in the issue body, but it also needs #3's message model and fixtures before it can be complete.
+- Issue #5 depends on the app shell and token layer; it should consume the shared `Message` type once #3 exists.
+- Issue #6 depends on fixtures/store data and design tokens, then composes `MessageCard` into the inbox list.
+- Issue #7 depends on the message model/store and adds reader selection plus mark-as-read behavior.
+- Issue #8 depends on shell and tokens, and should integrate with the store's draft and sent/local collection.
+- Issue #9 follows the store work and covers toggling, draft save/restore, hydration, and local-storage fallback.
+- Issue #10 follows component/store styling and verifies accent usage comes from the token layer everywhere.
+- Issue #11 follows the complete interaction surface and tests inbox open/read, compose submit, and reload persistence.
+- Issue #12 follows the tested UI and documents Vite static build and bare self-hosted serving from `dist/`.
+
+## Key Design Decisions
+
+- Keep Cardbox fully static and client-side. No server, API layer, CORS logic, or deployment runtime is needed for the planned scope.
+- Use a small React store pattern, preferably Zustand or a lightweight custom hook/context chosen during Issue #4 based on installed dependencies and test ergonomics.
+- Keep persistence schema explicit and versionable, with graceful fallback when local storage is missing, malformed, or outdated.
+- Make design tokens the only source for the accent color so unread indicators, compose action, and sender highlight cannot drift.
+- Prefer route-free state-driven views unless future issues introduce navigation requirements; inbox and reader can switch from selected-message state.
+- Use Vitest for unit tests and Playwright for the end-to-end flow if those tools are added with the Vite setup.
