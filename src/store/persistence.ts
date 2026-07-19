@@ -2,7 +2,7 @@ import type { DraftMessage, LocalMessage, ReadStateById } from './types';
 
 type BrowserStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
-const STORAGE_KEY = 'interaction-store:v1';
+export const INTERACTION_STORAGE_KEY = 'interaction-store:v1';
 const STORAGE_VERSION = 1;
 
 export const emptyDraft: DraftMessage = {
@@ -38,7 +38,7 @@ export function loadInteractionState(
   }
 
   try {
-    const rawValue = storage.getItem(STORAGE_KEY);
+    const rawValue = storage.getItem(INTERACTION_STORAGE_KEY);
 
     if (!rawValue) {
       return null;
@@ -77,7 +77,7 @@ export function saveInteractionState(
 
   try {
     storage.setItem(
-      STORAGE_KEY,
+      INTERACTION_STORAGE_KEY,
       JSON.stringify({
         version: STORAGE_VERSION,
         readById: state.readById,
@@ -98,7 +98,7 @@ export function clearInteractionState(
   }
 
   try {
-    storage.removeItem(STORAGE_KEY);
+    storage.removeItem(INTERACTION_STORAGE_KEY);
   } catch {
     return;
   }
