@@ -1,30 +1,29 @@
-# Architecture Plan: alex-1883-cardbox
+# Architecture Plan: Issue #27 — Replace app background with a bold multi-color gradient
 
 ## Project shape
-- Vite + React + TypeScript single-page Cardbox inbox app.
-- Tailwind CSS is configured in `tailwind.config.js` and all app-wide visual tokens are exposed as CSS custom properties in `src/styles/global.css`.
-- Static frontend only: no backend, database, CORS, or runtime proxy-specific code is needed for Issue #25.
+- Vite + React + TypeScript single-page static inbox prototype.
+- Tailwind CSS is configured in `tailwind.config.js`; app-wide component styles are centralized in `src/styles/global.css` using Tailwind `@apply` plus CSS custom properties.
+- There is no backend, database, auth layer, routing library, or runtime service dependency involved in this visual change.
 
 ## Module structure and file organization
-- `src/main.tsx`: React entrypoint, imports global styles.
-- `src/App.tsx`: Top-level application composition.
-- `src/components/`: Reusable UI primitives such as message cards, indicators, sender highlight, and compose controls.
-- `src/views/`: Screen-level inbox and reader views.
-- `src/store/`: Client-side state and local-storage persistence helpers/tests.
-- `src/types/`: Shared message and store-related TypeScript models.
-- `src/fixtures/`: Seed inbox content.
-- `src/styles/global.css`: Source of runtime CSS custom properties and Tailwind component classes. `--color-neutral-base` drives the page/app background through `bg-neutral-base`.
-- `src/styles/tokens.ts`: TypeScript mirror of design-token color channels for tests and shared token metadata.
-- `src/styles/tokens.test.ts`: Guards token mapping, contrast, and theme-token integrity.
+- `src/main.tsx`: React entrypoint and global stylesheet import.
+- `src/App.tsx`: Top-level app switch between inbox and reader views.
+- `src/components/`: Reusable UI components such as `AppShell`, `MessageCard`, `ComposePanel`, and visual accent helpers.
+- `src/views/`: Inbox and reader screen-level components.
+- `src/store/`: Custom `useSyncExternalStore` interaction store and localStorage persistence.
+- `src/types/` and `src/fixtures/`: Shared message types and seed inbox data.
+- `src/styles/global.css`: Primary implementation target for Issue #27 because `.app-shell` currently owns the page background treatment.
+- `src/styles/tokens.ts` and `src/styles/tokens.test.ts`: Token mirror and tests. Update only if the gradient requires new named token values or if the neutral base token itself changes.
+- `index.html`: Update `theme-color` only if the chosen gradient has a clear dominant top/background color that should influence browser chrome.
 
 ## Issue dependency plan
-- Issue #25, "Change neutral base background to light blue", is independent of feature/store work.
-- It depends only on the existing token layer from `src/styles/global.css`, `src/styles/tokens.ts`, and `tailwind.config.js`.
-- No new dependencies are required.
+- Only Issue #27 is in scope, so there are no cross-issue dependencies.
+- The change is visual and should not touch inbox state, persistence, message fixtures, or compose behavior.
+- Existing deployment watermark code should be preserved and kept above the UI.
 
-## Key design decisions for Issue #25
-- Treat the neutral base color as a design token, not a component-local style.
-- Update both the CSS custom property (`--color-neutral-base`) and the TypeScript token mirror (`themeColorChannels.neutralBase`) to the same light-blue RGB channels so runtime styling and tests stay aligned.
-- Update `index.html` `theme-color` to the matching hex color so browser chrome aligns with the new background.
-- Preserve existing neutral surface, border, ink, muted, and accent tokens unless tests or contrast checks indicate a necessary adjustment.
-- Validate with the existing Node toolchain: `npm test`, `npm run lint`, and `npm run build`.
+## Key design decisions
+- Implement the bold multi-color gradient at the app/background layer, preferably in `.app-shell`, so it appears on every app view without duplicating styles in `InboxView` or `ReaderView`.
+- Preserve foreground readability by keeping message cards, reader panels, and compose panels on `neutral-surface` backgrounds with existing borders/shadows.
+- Use layered CSS gradients rather than adding image assets or dependencies.
+- Keep Tailwind tokens stable unless a token-level update is necessary; this minimizes risk to existing contrast tests.
+- Validate with the existing workflow: `npm run format:check`, `npm run lint`, `npm test`, and `npm run build`.
