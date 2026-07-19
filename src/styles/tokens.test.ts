@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { themeColorChannels, themeCssVariables, themeTokens } from './tokens';
+import {
+  appBackgroundGradient,
+  themeColorChannels,
+  themeCssVariables,
+  themeTokens,
+} from './tokens';
 
 type RgbTuple = readonly [number, number, number];
 
@@ -25,6 +30,16 @@ function contrastRatio(foreground: RgbTuple, background: RgbTuple): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+function blendRgb(
+  foreground: RgbTuple,
+  background: RgbTuple,
+  alpha: number,
+): RgbTuple {
+  return foreground.map((channel, index) =>
+    Math.round(channel * alpha + background[index] * (1 - alpha)),
+  ) as [number, number, number];
+}
+
 describe('design tokens', () => {
   it('keeps accent references routed through the token layer', () => {
     expect(themeTokens.colors.accent).toBe(`var(${themeCssVariables.accent})`);
@@ -35,15 +50,35 @@ describe('design tokens', () => {
     });
   });
 
+  it('defines the app background as a bold multi-color mesh', () => {
+    expect(appBackgroundGradient.meshStops).toHaveLength(5);
+    expect(
+      new Set(appBackgroundGradient.meshStops.map((stop) => stop.join(',')))
+        .size,
+    ).toBe(appBackgroundGradient.meshStops.length);
+    expect(themeTokens.colors.gradientPlum).toBe(
+      `var(${themeCssVariables.gradientPlum})`,
+    );
+    expect(themeTokens.colors.gradientCyan).toBe(
+      `var(${themeCssVariables.gradientCyan})`,
+    );
+    expect(themeTokens.colors.gradientCoral).toBe(
+      `var(${themeCssVariables.gradientCoral})`,
+    );
+    expect(themeTokens.colors.gradientGold).toBe(
+      `var(${themeCssVariables.gradientGold})`,
+    );
+    expect(themeTokens.colors.gradientAzure).toBe(
+      `var(${themeCssVariables.gradientAzure})`,
+    );
+  });
+
   it('keeps basic AA contrast for accent and neutral text pairings', () => {
     expect(
       contrastRatio(
         themeColorChannels.accent,
         themeColorChannels.neutralSurface,
       ),
-    ).toBeGreaterThanOrEqual(4.5);
-    expect(
-      contrastRatio(themeColorChannels.accent, themeColorChannels.neutralBase),
     ).toBeGreaterThanOrEqual(4.5);
     expect(
       contrastRatio(
@@ -60,8 +95,25 @@ describe('design tokens', () => {
     expect(
       contrastRatio(
         themeColorChannels.neutralInk,
-        themeColorChannels.neutralBase,
+        themeColorChannels.neutralSurface,
       ),
     ).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('keeps app text and accent readable over the gradient scrim', () => {
+    for (const meshStop of appBackgroundGradient.meshStops) {
+      const scrimmedStop = blendRgb(
+        themeColorChannels.backgroundScrim,
+        meshStop,
+        appBackgroundGradient.scrimOpacity,
+      );
+
+      expect(
+        contrastRatio(themeColorChannels.neutralInk, scrimmedStop),
+      ).toBeGreaterThanOrEqual(4.5);
+      expect(
+        contrastRatio(themeColorChannels.accent, scrimmedStop),
+      ).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });
