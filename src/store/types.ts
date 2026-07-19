@@ -6,12 +6,19 @@ export type DraftMessage = {
   body: string;
 };
 
+export type LocalMessage = DraftMessage & {
+  id: string;
+  snippet: string;
+  timestamp: string;
+};
+
 export type ReadStateById = Partial<Record<MessageId, boolean>>;
 
 export type InteractionState = {
   messages: Message[];
   selectedMessageId: MessageId | null;
   draft: DraftMessage;
+  localMessages: LocalMessage[];
 };
 
 export type InteractionSnapshot = InteractionState & {
@@ -29,4 +36,5 @@ export type InteractionStore = {
   updateDraft: (draft: Partial<DraftMessage>) => void;
   replaceDraft: (draft: DraftMessage) => void;
   clearDraft: () => void;
+  fileDraft: () => LocalMessage | null;
 };

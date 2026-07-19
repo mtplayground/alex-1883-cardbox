@@ -1,9 +1,12 @@
-import { MessageCard } from '../components';
+import { useState } from 'react';
+
+import { ComposeActionButton, ComposePanel, MessageCard } from '../components';
 import { interactionStore, useInteractionStore } from '../store';
 import type { MessageId } from '../types';
 
 export function InboxView() {
   const { messages, selectedMessageId, unreadCount } = useInteractionStore();
+  const [composeOpen, setComposeOpen] = useState(false);
   const totalCount = messages.length;
 
   function handleOpenMessage(messageId: MessageId) {
@@ -20,11 +23,21 @@ export function InboxView() {
             Messages
           </h2>
         </div>
-        <div className="inbox-view__summary" aria-label="Inbox summary">
-          <span className="inbox-count-pill">{totalCount} total</span>
-          <span className="inbox-count-pill">{unreadCount} unread</span>
+        <div className="inbox-view__tools">
+          <div className="inbox-view__summary" aria-label="Inbox summary">
+            <span className="inbox-count-pill">{totalCount} total</span>
+            <span className="inbox-count-pill">{unreadCount} unread</span>
+          </div>
+          <ComposeActionButton
+            expanded={composeOpen}
+            onClick={() => setComposeOpen((open) => !open)}
+          />
         </div>
       </div>
+
+      {composeOpen ? (
+        <ComposePanel onClose={() => setComposeOpen(false)} />
+      ) : null}
 
       {totalCount === 0 ? (
         <div className="inbox-state" role="status">
