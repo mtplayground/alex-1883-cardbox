@@ -1,10 +1,10 @@
 import { AppShell } from './components/AppShell';
-import { HomeView } from './views/HomeView';
+import { InboxView } from './views';
 
 export default function App() {
   return (
     <AppShell>
-      <HomeView />
+      <InboxView />
     </AppShell>
   );
 }
