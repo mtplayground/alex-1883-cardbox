@@ -57,5 +57,11 @@ describe('design tokens', () => {
         themeColorChannels.neutralSurface,
       ),
     ).toBeGreaterThanOrEqual(4.5);
+    expect(
+      contrastRatio(
+        themeColorChannels.neutralInk,
+        themeColorChannels.neutralBase,
+      ),
+    ).toBeGreaterThanOrEqual(4.5);
   });
 });

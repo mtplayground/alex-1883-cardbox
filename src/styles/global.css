@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --color-neutral-base: 247 245 240;
+    --color-neutral-base: 239 246 255;
     --color-neutral-surface: 255 253 248;
     --color-neutral-border: 221 215 205;
     --color-neutral-muted: 107 98 87;
