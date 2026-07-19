@@ -51,8 +51,8 @@
     @apply min-h-screen bg-neutral-base text-neutral-ink;
     background-image: linear-gradient(
       180deg,
-      rgb(255 255 255 / 0.84),
-      rgb(255 255 255 / 0)
+      rgb(var(--color-neutral-surface) / 0.84),
+      rgb(var(--color-neutral-surface) / 0)
     );
   }
 
@@ -111,7 +111,7 @@
   }
 
   .message-card--interactive {
-    @apply cursor-pointer hover:border-accent/45 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+    @apply cursor-pointer hover:border-accent/45 hover:bg-neutral-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
   }
 
   .message-card__unread-indicator {
@@ -288,7 +288,7 @@
 
   .compose-field input,
   .compose-field textarea {
-    @apply w-full rounded-lg border border-neutral-border bg-white px-3 py-2 text-base font-normal leading-6 text-neutral-ink shadow-sm outline-none transition-colors placeholder:text-neutral-muted focus:border-accent focus:ring-2 focus:ring-accent/20;
+    @apply w-full rounded-lg border border-neutral-border bg-neutral-surface px-3 py-2 text-base font-normal leading-6 text-neutral-ink shadow-sm outline-none transition-colors placeholder:text-neutral-muted focus:border-accent focus:ring-2 focus:ring-accent/20;
   }
 
   .compose-field textarea {
