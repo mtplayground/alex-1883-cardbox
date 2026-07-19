@@ -1,5 +1,5 @@
 export const themeColorChannels = {
-  neutralBase: [247, 245, 240],
+  neutralBase: [239, 246, 255],
   neutralSurface: [255, 253, 248],
   neutralBorder: [221, 215, 205],
   neutralMuted: [107, 98, 87],
